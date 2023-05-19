@@ -128,4 +128,25 @@ public class ElasticsearchClientTest {
                 .get();
     }
 
+    @Test
+    public void testAddDocument3() throws Exception {
+        for (int i = 5; i < 100; i++){
+            // 创建一个Article对象，设置对象的属性
+            Article article = new Article();
+            article.setId((long) i);
+            article.setTitle("关于生活" + i);
+            article.setContent("1对夫妻2个打工人带3个孩子养4个父母月薪5千掏空6个钱包7天无休8十万买的房子不到9十平米生活10分困难" + i);
+
+            // 把Article对象转换为JSON格式的字符串
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonDocument = objectMapper.writeValueAsString(article);
+
+            // 把文档写入索引库
+            client.prepareIndex("index_hello", "article", article.getId().toString())
+                    .setSource(jsonDocument, XContentType.JSON)
+                    .get();
+        }
+    }
+
+
 }
